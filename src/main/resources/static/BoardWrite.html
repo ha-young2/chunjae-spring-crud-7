@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>작성하기</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    </head>
+    <body>
+        <section id="board">
+            <h1>{{title}}</h1>
+            <p v-html="contents"></p>
+
+            <form @submit.prevent="save" method="post" class="py-5" action="/board/save">
+                <div>
+                    <label>title</label>
+                    <input class="form-control" type="text" v-model="post.title">
+                </div>
+                <div>
+                    <label>contents</label>
+                    <textarea class="form-control" v-model="post.contents"></textarea>
+                </div>
+                <button class="btn btn-primary">Save</button>
+            </form>
+        </section>
+    </body>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    title: '작성하기',
+                    contents: '<b>제목과 내용을 작성 후 등록해주세요.</b>',
+                    boardList: [],
+                    post: {
+                        title: "",
+                        contents: "",
+                    }
+                };
+            },
+            mounted() {
+                // todo : 수정할 데이터 맵핑
+                this.list();
+            },
+            methods: {
+                list() {
+                    $.get('/board/')
+                    .done( res => {
+                        this.boardList = res;
+                        this.boardList.forEach( row => row.created = row.created.substring(0,10));
+                    });
+                },
+                save() {
+                    $.post('/board/save', this.post)
+                    .done( res => {
+                        this.post = { title: '', contents: '' };
+                        // todo : 부모창 .list()
+                        this.list();
+                    });
+                }
+            }
+        }).mount('#board');
+    </script>
+</html>

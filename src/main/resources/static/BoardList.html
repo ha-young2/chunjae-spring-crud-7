@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>게시판</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    </head>
+    <body>
+        <section id="board">
+            <h1>목록</h1>
+            <p v-html="contents"></p>
+            <button @click="openWinPop('BoardWrite.html',500, 500);" class="btn btn-primary">작성하기</button>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>title</th>
+                        <th>contents</th>
+                        <th>created</th>
+                        <th>updated</th>
+                        <th>buttons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in boardList">
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.title }}</td>
+                        <td>{{ row.contents }}</td>
+                        <td>{{ row.created }}</td>
+                        <td>{{ row.updated }}</td>
+                        <td>
+                            <!-- <a @click.prevent="edit(row)" class="btn btn-sm btn-primary" href="#edit">edit</a> 
+                            <a @click.prevent="remove(row.id)" class="btn btn-sm btn-danger" href="#delete">delete</a>  -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+    <script src="/common.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    title: '<b>Board</b>',
+                    contents: '<b>this is Board</b>',
+                    boardList: [],
+                    post: {
+                        title: "",
+                        contents: "",
+                    }
+                };
+            },
+            mounted() {
+                this.list();
+            },
+            methods: {
+                list: function() {
+                    $.get('/board/')
+                    .done( res => {
+                        this.boardList = res;
+                        this.boardList.forEach( row => row.created = row.created.substring(0,10));
+                    });
+                },
+                save() {
+                    $.post('/board/save', this.post)
+                    .done( res => {
+                        this.post = { title: '', contents: '' };
+                        this.list();
+                    });
+                    
+                },
+                openWinPop: bd.openWinPop,
+                // 윈도우 팝업 닫기 
+                closeWinPop(){
+                    if(this.windowRef) {
+                    this.windowRef.close();
+                    this.windowRef = null;
+                    }
+                },
+            }
+        }).mount('#board');
+    </script>
+</html>
