@@ -1,4 +1,4 @@
-package cjedu.crud;
+package team7.crud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

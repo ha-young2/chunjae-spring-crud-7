@@ -1,4 +1,4 @@
-package cjedu.crud.blog;
+package team7.crud.blog;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package cjedu.crud.board;
+package team7.crud.board;
 
 import java.util.List;
 

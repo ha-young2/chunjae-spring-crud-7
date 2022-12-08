@@ -1,23 +1,24 @@
-package cjedu.crud.board;
-
-import java.time.LocalDateTime;
-
+package team7.crud.board;
+import java.time.LocalDateTime;    
 import javax.persistence.*;
-
 import lombok.Data;
 
-
+  
 @Entity
 @Data
-public class Board {
+public class BoardReply {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 원글의 id
     @Column(nullable = false)
-    private String title;
+    private Long boardId;
 
     @Column(nullable = false)
     private String contents;
+
+    @Column(nullable = false)
+    private String userName;
 
     @Column
     private LocalDateTime created;
@@ -25,4 +26,5 @@ public class Board {
     @Column
     private LocalDateTime updated;
 }
-
+    
+    
